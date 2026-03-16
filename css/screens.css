@@ -1,0 +1,141 @@
+/* ══════════════════════════════════════
+   VIAGEM FÁCIL — Screen-specific styles
+   ══════════════════════════════════════ */
+
+/* ── SEAT MAP (Bus) ───────────────────── */
+.bus-layout { display: flex; gap: 20px; align-items: flex-start; flex-wrap: wrap; }
+.bus-wrapper {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+.bus-front-label {
+  text-align: center; font-size: 11px; font-weight: 700; color: var(--gray-400);
+  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 18px;
+  display: flex; align-items: center; gap: 10px;
+}
+.bus-front-label::before,
+.bus-front-label::after { content: ''; flex: 1; height: 1px; background: var(--gray-200); }
+.seat-grid { display: grid; grid-template-columns: repeat(5, 46px); gap: 7px; }
+.seat {
+  width: 46px; height: 42px; border-radius: 9px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s; border: 1.5px solid transparent;
+  font-size: 10px; font-weight: 700; gap: 1px; user-select: none;
+}
+.seat .sn { font-size: 12px; font-weight: 800; }
+.seat.free     { background: var(--gray-100); border-color: var(--gray-200); color: var(--gray-500); }
+.seat.free:hover { background: var(--blue-light); border-color: var(--blue); color: var(--blue); box-shadow: 0 2px 8px rgba(0,87,255,0.15); }
+.seat.taken    { background: #FEE2E2; border-color: #FECACA; color: var(--red); cursor: default; }
+.seat.taken:hover { transform: none; }
+.seat.selected { background: var(--blue); border-color: var(--blue-dark); color: white; box-shadow: 0 4px 14px rgba(0,87,255,0.4); }
+.seat.driver   { background: var(--gray-100); border-color: var(--gray-200); color: var(--gray-400); cursor: default; font-size: 20px; }
+.seat.gap      { visibility: hidden; pointer-events: none; }
+.seat-legend   { display: flex; gap: 16px; margin-top: 18px; justify-content: center; }
+.leg-item      { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--gray-500); font-weight: 500; }
+.leg-box       { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid; }
+.leg-free      { background: var(--gray-100); border-color: var(--gray-300); }
+.leg-taken     { background: #FEE2E2; border-color: #FECACA; }
+.leg-selected  { background: var(--blue); border-color: var(--blue-dark); }
+.bus-side-panel { flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 16px; }
+
+/* ── HOTEL ROOMS ──────────────────────── */
+.rooms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+.room-card {
+  background: var(--white); border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius); padding: 16px 12px; text-align: center;
+  cursor: pointer; transition: all 0.2s; position: relative;
+}
+.room-card:hover:not(.full) { border-color: var(--blue); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.room-card.selected { border-color: var(--blue); background: var(--blue-light); box-shadow: 0 0 0 1px var(--blue), var(--shadow-md); }
+.room-card.full  { background: var(--gray-50); opacity: 0.6; cursor: not-allowed; }
+.room-card.full:hover { transform: none; box-shadow: none; border-color: var(--gray-200); }
+.room-number { font-size: 22px; font-weight: 800; color: var(--gray-900); }
+.room-type   { font-size: 10px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.06em; margin: 4px 0; }
+.room-beds   { display: flex; justify-content: center; gap: 3px; margin: 8px 0 6px; }
+.bed-pip     { width: 16px; height: 16px; border-radius: 4px; }
+.bed-pip.occ { background: var(--blue); }
+.bed-pip.free { background: var(--gray-200); }
+.room-occ    { font-size: 12px; font-weight: 700; }
+.room-full-tag {
+  position: absolute; top: 6px; right: 6px;
+  background: var(--red-lt); color: var(--red);
+  font-size: 9px; font-weight: 700; padding: 2px 6px; border-radius: 4px; letter-spacing: 0.03em;
+}
+
+/* ── HOTEL LAYOUT (new) ───────────────── */
+.hotel-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 16px;
+  align-items: flex-start;
+}
+.hotel-map-card { width: 100%; }
+.hotel-side { display: flex; flex-direction: column; gap: 16px; }
+
+/* Room card new styles */
+.room-card { cursor: pointer; }
+.room-card.full { cursor: pointer; } /* allow click to see details */
+.room-card-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+.room-tipo-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 7px;
+  border-radius: 20px; white-space: nowrap;
+}
+.room-amenities {
+  display: flex; flex-wrap: wrap; gap: 3px;
+  justify-content: center; margin: 6px 0 4px;
+}
+.room-amenity {
+  font-size: 9px; font-weight: 600; color: var(--gray-500);
+  background: var(--gray-100); border-radius: 4px; padding: 1px 5px;
+}
+.room-note {
+  font-size: 9px; color: var(--gray-400); margin-top: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Hotel legend */
+.hotel-legend {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 14px;
+}
+.hotel-legend-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; color: var(--gray-600);
+  background: white; border: 1px solid var(--gray-200);
+  border-radius: 20px; padding: 4px 10px;
+}
+
+/* Detail field (modal) */
+.detail-field { display: flex; flex-direction: column; gap: 3px; }
+.detail-label { font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: .05em; }
+.detail-value { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+
+/* Tipo btn grid in config modal */
+.tipo-btn { transition: all .15s; }
+.tipo-btn.active { font-weight: 700; }
+
+/* Responsive hotel */
+@media (max-width: 900px) {
+  .hotel-layout { grid-template-columns: 1fr; }
+}
+
+/* ── PAYMENTS (new) ───────────────────── */
+/* Installment plan preview */
+.plano-parcela {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; border-radius: 9px; margin-bottom: 6px;
+  border: 1px solid var(--gray-200);
+}
+.plano-parcela.pago   { background: var(--green-lt); border-color: #bfeed8; }
+.plano-parcela.vence  { background: var(--yellow-lt); border-color: #f6a62345; }
+.plano-parcela.futuro { background: var(--gray-50); }
+
+/* Alert badge for overdue */
+.badge-venc {
+  background: #FFF3CD; color: #856404;
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px;
+}

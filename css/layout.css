@@ -1,0 +1,119 @@
+/* ══════════════════════════════════════
+   VIAGEM FÁCIL — Layout
+   ══════════════════════════════════════ */
+
+/* ── SIDEBAR ─────────────────────────── */
+.sidebar {
+  position: fixed; left: 0; top: 0; bottom: 0; width: var(--sidebar-w);
+  background: var(--white); border-right: 1px solid var(--gray-200);
+  display: flex; flex-direction: column; z-index: 100;
+  box-shadow: var(--shadow-sm); transition: width 0.25s ease;
+}
+.sidebar-brand { padding: 24px 20px 20px; border-bottom: 1px solid var(--gray-100); }
+.brand-logo { display: flex; align-items: center; gap: 10px; }
+.brand-icon {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+  display: flex; align-items: center; justify-content: center; font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0,87,255,0.3);
+}
+.brand-name { font-size: 16px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.3px; }
+.brand-name span { color: var(--blue); }
+.brand-sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; font-weight: 400; }
+.nav-section { padding: 16px 12px 8px; }
+.nav-label {
+  font-size: 10px; font-weight: 700; color: var(--gray-400);
+  text-transform: uppercase; letter-spacing: 0.08em; padding: 0 8px; margin-bottom: 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+  border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s;
+  color: var(--gray-600); font-weight: 500; font-size: 14px; user-select: none;
+}
+.nav-item:hover { background: var(--gray-50); color: var(--gray-900); }
+.nav-item.active { background: var(--blue-light); color: var(--blue); font-weight: 600; }
+.nav-icon { font-size: 18px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-label-text { flex: 1; }
+.nav-badge {
+  margin-left: auto; background: var(--blue); color: white;
+  font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; min-width: 20px; text-align: center;
+}
+.nav-divider { height: 1px; background: var(--gray-100); margin: 8px 12px; }
+.sidebar-footer { margin-top: auto; padding: 16px; border-top: 1px solid var(--gray-100); }
+.sidebar-trip-info {
+  background: linear-gradient(135deg, var(--blue) 0%, #1a6bff 50%, var(--blue-mid) 100%);
+  border-radius: var(--radius); padding: 14px; color: white; position: relative; overflow: hidden;
+}
+.sidebar-trip-info::before {
+  content: '✈'; position: absolute; right: -8px; top: -8px;
+  font-size: 52px; opacity: 0.1; transform: rotate(25deg);
+}
+.trip-label { font-size: 10px; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.trip-name  { font-size: 14px; font-weight: 700; margin-top: 3px; }
+.trip-date  { font-size: 11px; opacity: 0.75; margin-top: 2px; }
+.trip-stats { display: flex; gap: 8px; margin-top: 10px; }
+.trip-stat  { flex: 1; text-align: center; background: rgba(255,255,255,0.15); border-radius: 8px; padding: 6px 4px; }
+.trip-stat-n { font-size: 16px; font-weight: 800; }
+.trip-stat-l { font-size: 9px; opacity: 0.75; }
+
+/* ── MAIN ─────────────────────────────── */
+.main { margin-left: var(--sidebar-w); min-height: 100vh; }
+
+/* ── TOPBAR ───────────────────────────── */
+.topbar {
+  background: var(--white); border-bottom: 1px solid var(--gray-200);
+  padding: 0 32px; height: var(--topbar-h);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-left  { display: flex; align-items: center; gap: 8px; }
+.topbar-title { font-size: 18px; font-weight: 700; color: var(--gray-900); letter-spacing: -0.3px; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.tb-search {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--gray-100); border: 1.5px solid transparent;
+  border-radius: 10px; padding: 8px 14px; width: 240px; transition: all 0.2s;
+}
+.tb-search:focus-within { background: white; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,87,255,0.08); }
+.tb-search input { background: none; border: none; outline: none; font-size: 13px; color: var(--gray-700); width: 100%; font-family: inherit; }
+.tb-search input::placeholder { color: var(--gray-400); }
+.tb-icon { color: var(--gray-400); font-size: 15px; }
+.notif-btn {
+  width: 36px; height: 36px; border-radius: 10px; background: var(--gray-100); border: none;
+  display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer;
+  position: relative; transition: background 0.15s;
+}
+.notif-btn:hover { background: var(--gray-200); }
+.notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--red); border: 2px solid white; }
+.avatar-btn {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 13px; font-weight: 700; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,87,255,0.25);
+}
+
+/* ── SCREENS ─────────────────────────── */
+.screen { display: none; padding: 28px 32px; animation: pgIn 0.2s ease; }
+.screen.active { display: block; }
+@keyframes pgIn { from { opacity:0; transform: translateY(6px); } to { opacity:1; transform: none; } }
+
+/* ── PAGE HEADER ─────────────────────── */
+.page-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.page-hd-left .page-title { font-size: 22px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.4px; }
+.page-hd-left .page-subtitle { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+.page-hd-actions { display: flex; gap: 10px; align-items: center; }
+
+/* ── RESPONSIVE ──────────────────────── */
+@media (max-width: 1100px) {
+  :root { --sidebar-w: 72px; }
+  .brand-name, .brand-sub, .nav-label-text, .nav-badge, .nav-label, .sidebar-footer { display: none; }
+  .brand-logo { justify-content: center; }
+  .nav-item { justify-content: center; padding: 10px; }
+}
+@media (max-width: 768px) {
+  .main { margin-left: 0; }
+  .sidebar { display: none; }
+  .topbar { padding: 0 16px; }
+  .screen { padding: 16px; }
+}

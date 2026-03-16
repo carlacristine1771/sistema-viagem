@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViagemFácil — Entrar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --blue:#0057FF;--blue2:#3B7BFF;--blue-lt:#EEF3FF;
+  --green:#00B37E;--red:#E53E3E;--yellow:#F6A623;
+  --teal:#00C4B4;--orange:#FF6B2B;
+  --g50:#F9FAFB;--g100:#F3F4F6;--g200:#E5E7EB;--g300:#D1D5DB;
+  --g400:#9CA3AF;--g500:#6B7280;--g600:#4B5563;--g700:#374151;
+  --g800:#1F2937;--g900:#111827;
+}
+body{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  min-height:100vh;background:var(--g50);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:28px 16px 60px;overflow-x:hidden;position:relative;
+}
+/* blobs */
+.blob{position:fixed;border-radius:50%;filter:blur(100px);opacity:.09;pointer-events:none;z-index:0;}
+.b1{width:700px;height:700px;background:var(--blue);top:-200px;left:-250px;}
+.b2{width:500px;height:500px;background:var(--teal);bottom:-150px;right:-200px;}
+.b3{width:350px;height:350px;background:var(--orange);top:35%;left:50%;}
+/* page */
+.page{position:relative;z-index:1;width:100%;max-width:480px;}
+/* brand */
+.brand{text-align:center;margin-bottom:26px;}
+.brand-logo{
+  width:62px;height:62px;border-radius:18px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:30px;box-shadow:0 10px 28px rgba(0,87,255,.3);margin-bottom:12px;
+}
+.brand-name{font-size:26px;font-weight:800;color:var(--g900);letter-spacing:-.5px;}
+.brand-name b{color:var(--blue);}
+.brand-tag{font-size:13px;color:var(--g500);margin-top:3px;}
+/* portal cards */
+.portais{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.pcart{
+  background:#fff;border:2px solid var(--g200);border-radius:16px;
+  padding:16px 12px;text-align:center;cursor:pointer;
+  transition:border-color .18s,transform .18s,box-shadow .18s;user-select:none;
+}
+.pcart:hover{border-color:var(--blue);transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,87,255,.1);}
+.pcart.ativo{border-color:var(--blue);background:var(--blue-lt);}
+.pcart .pico{font-size:28px;margin-bottom:6px;}
+.pcart .plbl{font-size:13px;font-weight:700;color:var(--g800);}
+.pcart .pdsc{font-size:11px;color:var(--g500);margin-top:2px;}
+/* card */
+.card{
+  background:#fff;border:1px solid var(--g200);border-radius:22px;
+  padding:26px 24px;box-shadow:0 8px 40px rgba(0,0,0,.07),0 2px 8px rgba(0,0,0,.04);
+}
+/* modo toggle */
+.modo-toggle{
+  display:flex;border:1.5px solid var(--g200);border-radius:12px;
+  overflow:hidden;margin-bottom:22px;
+}
+.mbtn{
+  flex:1;padding:10px 6px;font-family:inherit;font-size:13px;
+  font-weight:700;color:var(--g500);background:transparent;border:none;
+  cursor:pointer;transition:background .18s,color .18s;
+}
+.mbtn.ativo{background:var(--blue);color:#fff;}
+.mbtn:not(.ativo):hover{background:var(--g100);}
+/* form fields */
+.titulo{font-size:18px;font-weight:800;color:var(--g900);letter-spacing:-.3px;margin-bottom:4px;}
+.subtit{font-size:12.5px;color:var(--g500);margin-bottom:18px;line-height:1.55;}
+.campo{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.campo label{font-size:12px;font-weight:700;color:var(--g700);}
+.campo-linha{display:flex;gap:11px;margin-bottom:13px;}
+.campo-linha .campo{flex:1;margin-bottom:0;}
+.ibox{position:relative;}
+.ibox input,.ibox select,.ibox textarea{padding-left:40px;}
+.iico{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  font-size:15px;color:var(--g400);pointer-events:none;z-index:1;
+}
+.iico.topo{top:13px;transform:none;}
+.iolho{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  font-size:15px;color:var(--g400);cursor:pointer;z-index:1;
+}
+.iolho:hover{color:var(--g700);}
+input,select,textarea{
+  width:100%;padding:11px 14px;
+  border:1.5px solid var(--g200);border-radius:10px;
+  font-family:inherit;font-size:14px;color:var(--g800);background:#fff;
+  outline:none;transition:border-color .15s,box-shadow .15s;
+}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,87,255,.09);
+}
+input.vermelho,select.vermelho{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,62,62,.09);}
+input::placeholder,textarea::placeholder{color:var(--g400);}
+textarea{resize:vertical;min-height:68px;}
+select{
+  appearance:none;padding-right:34px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 12px center;
+}
+.dica{font-size:11px;color:var(--g400);margin-top:3px;}
+.dica.av{color:#D97706;}
+/* senha força */
+.forca{margin-top:6px;}
+.forca-barras{display:flex;gap:4px;margin-bottom:4px;}
+.fbar{flex:1;height:4px;border-radius:99px;background:var(--g200);transition:background .25s;}
+.forca-txt{font-size:11px;color:var(--g400);}
+/* botões */
+.btn{
+  width:100%;padding:13px;border-radius:11px;border:none;
+  font-family:inherit;font-size:15px;font-weight:700;
+  cursor:pointer;transition:all .18s;display:block;margin-top:6px;
+}
+.btn-azul{
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;box-shadow:0 4px 16px rgba(0,87,255,.3);
+}
+.btn-azul:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(0,87,255,.4);}
+.btn-azul:active{transform:none;}
+.btn-cinza{
+  background:transparent;color:var(--g600);
+  border:1.5px solid var(--g200);margin-top:8px;
+}
+.btn-cinza:hover{background:var(--g100);}
+/* alertas */
+.alerta{
+  border-radius:10px;padding:11px 14px;font-size:13px;
+  font-weight:500;line-height:1.5;margin-top:10px;
+}
+.alerta.erro{background:#FFF5F5;border:1px solid #FED7D7;color:var(--red);}
+.alerta.aviso{background:#FFFBF0;border:1px solid #FDE68A;color:#92400E;}
+/* steps tracker */
+.steps{display:flex;align-items:center;margin-bottom:20px;}
+.stk{display:flex;flex-direction:column;align-items:center;gap:4px;flex-shrink:0;}
+.sbol{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:800;
+  background:var(--g100);color:var(--g400);border:2px solid var(--g200);
+  transition:all .3s;
+}
+.sbol.ativo{background:var(--blue);border-color:var(--blue);color:#fff;}
+.sbol.feito{background:var(--green);border-color:var(--green);color:#fff;}
+.slbl{font-size:10px;font-weight:600;color:var(--g400);white-space:nowrap;transition:color .3s;}
+.slbl.ativo{color:var(--blue);}
+.slbl.feito{color:var(--green);}
+.slinha{flex:1;height:2px;background:var(--g200);border-radius:99px;margin-bottom:16px;transition:background .3s;}
+.slinha.feita{background:var(--green);}
+/* revisão */
+.revisao{
+  background:var(--g50);border:1px solid var(--g200);
+  border-radius:14px;padding:14px 16px;margin-bottom:14px;
+}
+.rev-titulo{font-size:11px;font-weight:700;color:var(--g500);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;}
+.rev-linha{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--g200);}
+.rev-linha:last-child{border-bottom:none;padding-bottom:0;}
+.rev-k{font-size:12px;color:var(--g500);flex-shrink:0;}
+.rev-v{font-size:13px;font-weight:600;color:var(--g900);text-align:right;}
+/* aviso pendente */
+.aviso-pend{
+  display:flex;align-items:flex-start;gap:10px;
+  background:#FFFBF0;border:1px solid #FDE68A;border-radius:12px;
+  padding:12px 14px;font-size:12.5px;color:#92400E;
+  margin-bottom:14px;line-height:1.5;
+}
+/* sucesso */
+.sucesso{text-align:center;padding:8px 0;}
+.sico{font-size:58px;margin-bottom:14px;}
+.stit{font-size:22px;font-weight:800;color:var(--g900);letter-spacing:-.4px;}
+.ssub{font-size:13px;color:var(--g500);margin-top:8px;line-height:1.65;}
+.caixa-acesso{
+  background:var(--blue-lt);border:1px solid #c7d9ff;
+  border-radius:14px;padding:16px 18px;margin-top:18px;
+  text-align:left;font-size:13px;color:var(--g700);line-height:1.75;
+}
+/* divider */
+.ou{display:flex;align-items:center;gap:10px;margin:14px 0;font-size:12px;color:var(--g400);}
+.ou::before,.ou::after{content:'';flex:1;height:1px;background:var(--g200);}
+/* link */
+.lnk{color:var(--blue);font-weight:600;cursor:pointer;}
+.lnk:hover{text-decoration:underline;}
+/* demo */
+.demo{
+  background:var(--g50);border:1px dashed var(--g300);border-radius:10px;
+  padding:12px 14px;margin-top:14px;font-size:12px;color:var(--g600);line-height:1.75;
+}
+.demo strong{color:var(--g800);}
+.cod{font-family:monospace;background:var(--g200);padding:1px 6px;border-radius:4px;font-size:11px;}
+.rodape{text-align:center;margin-top:18px;font-size:12px;color:var(--g400);}
+/* ocultar/mostrar - TUDO CONTROLADO VIA JS, SEM CSS .hidden */
+@media(max-width:480px){.campo-linha{flex-direction:column;}}
+  </style>
+</head>
+<body>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+<div class="blob b3"></div>
+
+<div class="page">
+
+  <!-- marca -->
+  <div class="brand">
+    <div class="brand-logo">✈</div>
+    <div class="brand-name">Viagem<b>Fácil</b></div>
+    <div class="brand-tag">Sistema de Gestão de Excursões</div>
+  </div>
+
+  <!-- portal picker -->
+  <div class="portais">
+    <div class="pcart ativo" id="p-adm" onclick="trocarPortal('adm')">
+      <div class="pico">🛡️</div>
+      <div class="plbl">Administrador</div>
+      <div class="pdsc">Acesso total ao sistema</div>
+    </div>
+    <div class="pcart" id="p-vj" onclick="trocarPortal('vj')">
+      <div class="pico">🎒</div>
+      <div class="plbl">Viajante</div>
+      <div class="pdsc">Entrar ou criar conta</div>
+    </div>
+  </div>
+
+  <!-- ======= ADM ======= -->
+  <div class="card" id="sec-adm">
+    <div class="titulo">Painel do Administrador</div>
+    <div class="subtit">Acesso restrito — somente pessoal autorizado.</div>
+    <div class="campo">
+      <label>Usuário</label>
+      <div class="ibox">
+        <span class="iico">👤</span>
+        <input id="adm-user" type="text" placeholder="Nome de usuário">
+      </div>
+    </div>
+    <div class="campo">
+      <label>Senha</label>
+      <div class="ibox">
+        <span class="iico">🔒</span>
+        <input id="adm-pass" type="password" placeholder="Sua senha">
+        <span class="iolho" onclick="verSenha('adm-pass',this)">👁</span>
+      </div>
+    </div>
+    <div class="alerta erro" id="err-adm" style="display:none"></div>
+    <button class="btn btn-azul" onclick="loginAdm()">Entrar no Painel →</button>
+    <div class="demo">
+      <strong>Demo:</strong> usuário <span class="cod">admin</span> &nbsp; senha <span class="cod">admin123</span>
+    </div>
+  </div>
+
+  <!-- ======= VIAJANTE ======= -->
+  <div class="card" id="sec-vj" style="display:none">
+
+    <!-- login / cadastro toggle -->
+    <div class="modo-toggle">
+      <button class="mbtn ativo" id="btn-login"    onclick="trocarModo('login')">🔑 Entrar</button>
+      <button class="mbtn"       id="btn-cadastro" onclick="trocarModo('cadastro')">✨ Criar conta</button>
+    </div>
+
+    <!-- ---- LOGIN ---- -->
+    <div id="tela-login">
+      <div class="titulo">Bem-vindo de volta!</div>
+      <div class="subtit">Use seu CPF e senha para acessar o portal da viagem.</div>
+      <div class="campo">
+        <label>CPF</label>
+        <div class="ibox">
+          <span class="iico">🪪</span>
+          <input id="vj-cpf" type="text" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)">
+        </div>
+      </div>
+      <div class="campo">
+        <label>Senha</label>
+        <div class="ibox">
+          <span class="iico">🔒</span>
+          <input id="vj-pass" type="password" placeholder="Sua senha">
+          <span class="iolho" onclick="verSenha('vj-pass',this)">👁</span>
+        </div>
+      </div>
+      <div class="alerta erro" id="err-login" style="display:none"></div>
+      <button class="btn btn-azul" onclick="loginVj()">Acessar Minha Viagem →</button>
+      <div class="ou">ou</div>
+      <div style="text-align:center;font-size:13px;color:var(--g500)">
+        Não tem conta? <span class="lnk" onclick="trocarModo('cadastro')">Criar conta grátis →</span>
+      </div>
+      <div class="demo">
+        <strong>Demo viajante:</strong><br>
+        CPF <span class="cod">123.456.789-00</span> &nbsp; Senha <span class="cod">viagem123</span><br>
+        <span style="color:var(--g400);font-size:11px">Maria Santos, João Oliveira, Ana Lima…</span>
+      </div>
+    </div>
+
+    <!-- ---- CADASTRO ---- -->
+    <div id="tela-cadastro" style="display:none">
+
+      <!-- tracker de passos -->
+      <div class="steps" id="steps-bar">
+        <div class="stk">
+          <div class="sbol ativo" id="sbol1">1</div>
+          <div class="slbl ativo" id="slbl1">Dados</div>
+        </div>
+        <div class="slinha" id="sl1"></div>
+        <div class="stk">
+          <div class="sbol" id="sbol2">2</div>
+          <div class="slbl" id="slbl2">Senha</div>
+        </div>
+        <div class="slinha" id="sl2"></div>
+        <div class="stk">
+          <div class="sbol" id="sbol3">3</div>
+          <div class="slbl" id="slbl3">Revisar</div>
+        </div>
+      </div>
+
+      <!-- PASSO 1 -->
+      <div id="passo-1">
+        <div class="titulo">Seus dados pessoais</div>
+        <div class="subtit">Preencha as informações para criar sua conta de viajante.</div>
+
+        <div class="campo">
+          <label>Nome completo *</label>
+          <div class="ibox">
+            <span class="iico">👤</span>
+            <input id="c-nome" type="text" placeholder="Ex: Maria Aparecida da Silva">
+          </div>
+        </div>
+
+        <div class="campo-linha">
+          <div class="campo">
+            <label>CPF *</label>
+            <div class="ibox">
+              <span class="iico">🪪</span>
+              <input id="c-cpf" type="text" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)">
+            </div>
+            <div class="dica av">🔒 Será usado para login</div>
+          </div>
+          <div class="campo">
+            <label>Nascimento</label>
+            <input id="c-nasc" type="date">
+          </div>
+        </div>
+
+        <div class="campo-linha">
+          <div class="campo">
+            <label>Telefone / WhatsApp *</label>
+            <div class="ibox">
+              <span class="iico">📱</span>
+              <input id="c-tel" type="text" placeholder="(61) 99999-0000" maxlength="15" oninput="mascaraTel(this)">
+            </div>
+          </div>
+          <div class="campo">
+            <label>Gênero</label>
+            <div class="ibox">
+              <span class="iico">👤</span>
+              <select id="c-gen">
+                <option value="">Não informado</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>E-mail</label>
+          <div class="ibox">
+            <span class="iico">📧</span>
+            <input id="c-email" type="email" placeholder="seuemail@exemplo.com">
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Observações (opcional)</label>
+          <div class="ibox">
+            <span class="iico topo">📝</span>
+            <textarea id="c-obs" placeholder="Restrições alimentares, necessidades especiais…"></textarea>
+          </div>
+        </div>
+
+        <div class="alerta erro" id="err-p1" style="display:none"></div>
+        <button class="btn btn-azul" onclick="avancarP1()">Continuar → Criar senha</button>
+        <div class="ou">ou</div>
+        <div style="text-align:center;font-size:13px;color:var(--g500)">
+          Já tem conta? <span class="lnk" onclick="trocarModo('login')">Fazer login →</span>
+        </div>
+      </div><!-- /passo-1 -->
+
+      <!-- PASSO 2 -->
+      <div id="passo-2" style="display:none">
+        <div class="titulo">Crie sua senha</div>
+        <div class="subtit">Escolha uma senha segura para acessar o portal da viagem.</div>
+
+        <div class="campo">
+          <label>Nova senha *</label>
+          <div class="ibox">
+            <span class="iico">🔒</span>
+            <input id="c-pass1" type="password" placeholder="Mínimo 6 caracteres" oninput="mostrarForca()">
+            <span class="iolho" onclick="verSenha('c-pass1',this)">👁</span>
+          </div>
+          <div class="forca">
+            <div class="forca-barras">
+              <div class="fbar" id="fb1"></div>
+              <div class="fbar" id="fb2"></div>
+              <div class="fbar" id="fb3"></div>
+              <div class="fbar" id="fb4"></div>
+            </div>
+            <div class="forca-txt" id="ftxt">Força da senha</div>
+          </div>
+        </div>
+
+        <div class="campo">
+          <label>Confirmar senha *</label>
+          <div class="ibox">
+            <span class="iico">🔒</span>
+            <input id="c-pass2" type="password" placeholder="Repita a senha" oninput="checarMatch()">
+            <span class="iolho" onclick="verSenha('c-pass2',this)">👁</span>
+          </div>
+          <div class="dica" id="match-msg" style="font-size:12px"></div>
+        </div>
+
+        <div class="alerta erro" id="err-p2" style="display:none"></div>
+        <button class="btn btn-azul" onclick="avancarP2()">Continuar → Revisar dados</button>
+        <button class="btn btn-cinza" onclick="irPasso(1)">← Voltar</button>
+      </div><!-- /passo-2 -->
+
+      <!-- PASSO 3 -->
+      <div id="passo-3" style="display:none">
+        <div class="titulo">Confirme seus dados</div>
+        <div class="subtit">Verifique as informações antes de criar sua conta.</div>
+
+        <div class="revisao" id="box-revisao"></div>
+
+        <div class="aviso-pend">
+          <span style="font-size:18px;flex-shrink:0">⏳</span>
+          <div>Sua conta ficará <strong>pendente</strong> até o administrador confirmar e definir o valor da viagem. Você terá acesso completo após a aprovação.</div>
+        </div>
+
+        <div class="alerta erro" id="err-p3" style="display:none"></div>
+        <button class="btn btn-azul" id="btn-criar" onclick="finalizarCadastro()">✓ Criar minha conta</button>
+        <button class="btn btn-cinza" onclick="irPasso(2)">← Voltar</button>
+      </div><!-- /passo-3 -->
+
+      <!-- SUCESSO -->
+      <div id="passo-ok" style="display:none">
+        <div class="sucesso">
+          <div class="sico">🎉</div>
+          <div class="stit">Conta criada com sucesso!</div>
+          <div class="ssub">
+            Seu cadastro foi enviado e está <strong>aguardando aprovação</strong> do administrador.
+            Assim que confirmado, você terá acesso completo à sua viagem.
+          </div>
+          <div class="caixa-acesso">
+            <strong>Guarde seus dados de acesso:</strong><br>
+            CPF: <span id="ok-cpf" style="font-family:monospace;font-weight:700"></span><br>
+            Senha: a que você acabou de criar ✓
+          </div>
+          <button class="btn btn-azul" style="margin-top:18px" onclick="trocarModo('login')">Ir para o Login →</button>
+        </div>
+      </div><!-- /sucesso -->
+
+    </div><!-- /tela-cadastro -->
+  </div><!-- /sec-vj -->
+
+  <div class="rodape">ViagemFácil © 2025 — Todos os direitos reservados</div>
+</div>
+
+<script>
+/* ─── estado ─── */
+var portalAtual = 'adm';
+var modoAtual   = 'login';
+var passoAtual  = 1;
+var temp        = {};   /* dados coletados entre passos */
+
+/* ─── portal switch ─── */
+function trocarPortal(p) {
+  portalAtual = p;
+  el('p-adm').classList.toggle('ativo', p === 'adm');
+  el('p-vj' ).classList.toggle('ativo', p === 'vj');
+  mostrar('sec-adm', p === 'adm');
+  mostrar('sec-vj',  p === 'vj');
+}
+
+/* ─── login/cadastro switch ─── */
+function trocarModo(m) {
+  modoAtual = m;
+  el('btn-login'   ).classList.toggle('ativo', m === 'login');
+  el('btn-cadastro').classList.toggle('ativo', m === 'cadastro');
+  mostrar('tela-login',    m === 'login');
+  mostrar('tela-cadastro', m === 'cadastro');
+  esconderErros();
+  if (m === 'cadastro') irPasso(1);
+}
+
+/* ─── ADM login ─── */
+function loginAdm() {
+  var u = val('adm-user'), s = val('adm-pass');
+  ocultarErro('err-adm');
+  if (!u || !s) { mostrarErro('err-adm', '❌ Preencha usuário e senha.'); return; }
+  if (u === 'admin' && s === 'admin123') {
+    sessionStorage.setItem('vf_role', 'adm');
+    sessionStorage.setItem('vf_user', 'Administrador');
+    window.location.href = 'index.html';
+  } else {
+    mostrarErro('err-adm', '❌ Usuário ou senha incorretos.');
+  }
+}
+
+/* ─── Viajante login ─── */
+function loginVj() {
+  var cpf = val('vj-cpf'), pass = val('vj-pass');
+  ocultarErro('err-login');
+  if (!cpf || !pass) { mostrarErro('err-login', '❌ Preencha CPF e senha.'); return; }
+
+  var contas = carregarContas();
+  var cpfNum = cpf.replace(/\D/g,'');
+  var conta  = null;
+  for (var i = 0; i < contas.length; i++) {
+    if (contas[i].cpf.replace(/\D/g,'') === cpfNum) { conta = contas[i]; break; }
+  }
+
+  if (!conta)             { mostrarErro('err-login', '❌ CPF não encontrado. Verifique ou crie uma conta.'); return; }
+  if (conta.senha !== pass){ mostrarErro('err-login', '❌ Senha incorreta.'); return; }
+
+  sessionStorage.setItem('vf_role',          'viajante');
+  sessionStorage.setItem('vf_viajante_nome',  conta.nome);
+  sessionStorage.setItem('vf_viajante_cpf',   conta.cpf);
+  window.location.href = 'viajante.html';
+}
+
+/* ─── Passo 1: dados pessoais ─── */
+function avancarP1() {
+  ocultarErro('err-p1');
+  limparReds();
+
+  var nome = val('c-nome');
+  var cpf  = val('c-cpf');
+  var tel  = val('c-tel');
+
+  if (!nome) {
+    el('c-nome').classList.add('vermelho');
+    mostrarErro('err-p1', '❌ Nome completo é obrigatório.');
+    el('c-nome').focus();
+    return;
+  }
+  if (cpf.replace(/\D/g,'').length !== 11) {
+    el('c-cpf').classList.add('vermelho');
+    mostrarErro('err-p1', '❌ CPF inválido — digite todos os 11 dígitos.');
+    el('c-cpf').focus();
+    return;
+  }
+  if (tel.replace(/\D/g,'').length < 10) {
+    el('c-tel').classList.add('vermelho');
+    mostrarErro('err-p1', '❌ Telefone inválido — inclua o DDD.');
+    el('c-tel').focus();
+    return;
+  }
+
+  /* CPF duplicado? */
+  var contas = carregarContas();
+  var cpfNum = cpf.replace(/\D/g,'');
+  for (var i = 0; i < contas.length; i++) {
+    if (contas[i].cpf.replace(/\D/g,'') === cpfNum) {
+      el('c-cpf').classList.add('vermelho');
+      mostrarErro('err-p1', '❌ Este CPF já possui cadastro. Faça login ou use outro CPF.');
+      return;
+    }
+  }
+
+  /* salva no temp */
+  temp = {
+    nome:  nome,
+    cpf:   cpf,
+    tel:   tel,
+    nasc:  val('c-nasc'),
+    gen:   el('c-gen').value,
+    email: val('c-email'),
+    obs:   val('c-obs'),
+  };
+
+  irPasso(2);
+}
+
+/* ─── Passo 2: senha ─── */
+function avancarP2() {
+  ocultarErro('err-p2');
+  limparReds();
+
+  var p1 = el('c-pass1').value;
+  var p2 = el('c-pass2').value;
+
+  if (!p1) {
+    el('c-pass1').classList.add('vermelho');
+    mostrarErro('err-p2', '❌ Crie uma senha para continuar.');
+    el('c-pass1').focus();
+    return;
+  }
+  if (p1.length < 6) {
+    el('c-pass1').classList.add('vermelho');
+    mostrarErro('err-p2', '❌ A senha deve ter pelo menos 6 caracteres.');
+    el('c-pass1').focus();
+    return;
+  }
+  if (!p2) {
+    el('c-pass2').classList.add('vermelho');
+    mostrarErro('err-p2', '❌ Confirme sua senha.');
+    el('c-pass2').focus();
+    return;
+  }
+  if (p1 !== p2) {
+    el('c-pass2').classList.add('vermelho');
+    mostrarErro('err-p2', '❌ As senhas não coincidem. Verifique e tente novamente.');
+    el('c-pass2').focus();
+    return;
+  }
+
+  temp.senha = p1;
+  montarRevisao();
+  irPasso(3);
+}
+
+/* ─── Passo 3: revisão ─── */
+function montarRevisao() {
+  var linhas = [
+    ['Nome',       temp.nome],
+    ['CPF',        temp.cpf],
+    ['Telefone',   temp.tel],
+    ['E-mail',     temp.email || '—'],
+    ['Nascimento', temp.nasc  ? fmtData(temp.nasc) : '—'],
+    ['Gênero',     temp.gen   || 'Não informado'],
+  ];
+  if (temp.obs) linhas.push(['Observações', temp.obs]);
+
+  var html = '<div class="rev-titulo">📋 Resumo do cadastro</div>';
+  for (var i = 0; i < linhas.length; i++) {
+    html += '<div class="rev-linha"><span class="rev-k">'+linhas[i][0]+'</span>'
+          + '<span class="rev-v">'+linhas[i][1]+'</span></div>';
+  }
+  el('box-revisao').innerHTML = html;
+}
+
+/* ─── Finalizar ─── */
+function finalizarCadastro() {
+  ocultarErro('err-p3');
+  el('btn-criar').disabled    = true;
+  el('btn-criar').textContent = 'Criando conta…';
+
+  /* re-checa CPF duplicado */
+  var contas = carregarContas();
+  var cpfNum = temp.cpf.replace(/\D/g,'');
+  for (var i = 0; i < contas.length; i++) {
+    if (contas[i].cpf.replace(/\D/g,'') === cpfNum) {
+      mostrarErro('err-p3', '❌ Este CPF já está cadastrado. Volte e use outro CPF ou faça login.');
+      el('btn-criar').disabled    = false;
+      el('btn-criar').textContent = '✓ Criar minha conta';
+      return;
+    }
+  }
+
+  var nova = {
+    id:        Date.now(),
+    nome:      temp.nome,
+    cpf:       temp.cpf,
+    tel:       temp.tel,
+    nasc:      temp.nasc  || '',
+    gen:       temp.gen   || '',
+    email:     temp.email || '',
+    obs:       temp.obs   || '',
+    senha:     temp.senha,
+    status:    'Pendente',
+    createdAt: new Date().toLocaleDateString('pt-BR'),
+  };
+
+  /* salvar conta */
+  var lista = contasSalvas();
+  lista.push(nova);
+  try { localStorage.setItem('vf_accounts', JSON.stringify(lista)); } catch(e){}
+
+  /* fila ADM */
+  var fila = [];
+  try { fila = JSON.parse(localStorage.getItem('vf_pending_reg') || '[]'); } catch(e){}
+  fila.push(nova);
+  try { localStorage.setItem('vf_pending_reg', JSON.stringify(fila)); } catch(e){}
+
+  /* sucesso */
+  el('ok-cpf').textContent = temp.cpf;
+  temp = {};
+  irPasso('ok');
+}
+
+/* ─── Navegar entre passos ─── */
+function irPasso(n) {
+  passoAtual = n;
+
+  /* esconde todos os painéis */
+  ['passo-1','passo-2','passo-3','passo-ok'].forEach(function(id) {
+    el(id).style.display = 'none';
+  });
+
+  /* mostra o passo certo */
+  var alvo = (n === 'ok') ? 'passo-ok' : 'passo-' + n;
+  el(alvo).style.display = 'block';
+
+  /* anima */
+  el(alvo).style.animation = 'none';
+  void el(alvo).offsetHeight;
+  el(alvo).style.animation = 'aparece .22s ease';
+
+  /* tracker */
+  var bar = el('steps-bar');
+  bar.style.display = (n === 'ok') ? 'none' : 'flex';
+
+  if (typeof n === 'number' && n <= 3) {
+    for (var i = 1; i <= 3; i++) {
+      var b = el('sbol'+i), l = el('slbl'+i);
+      b.className = 'sbol'; l.className = 'slbl';
+      if (i < n)  { b.classList.add('feito');  l.classList.add('feito');  b.textContent = '✓'; }
+      if (i === n){ b.classList.add('ativo');   l.classList.add('ativo');  b.textContent = i;   }
+      if (i > n)  { b.textContent = i; }
+    }
+    for (var j = 1; j <= 2; j++) {
+      el('sl'+j).classList.toggle('feita', j < n);
+    }
+  }
+
+  /* limpa campos em vermelho */
+  limparReds();
+
+  /* scroll suave pro topo do card */
+  el('sec-vj').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+/* ─── Contas ─── */
+var DEMOS = [
+  {nome:'Maria Santos',  cpf:'123.456.789-00',tel:'(61) 99901-1111',senha:'viagem123',status:'Confirmado'},
+  {nome:'João Oliveira', cpf:'234.567.890-11',tel:'(61) 99902-2222',senha:'viagem123',status:'Confirmado'},
+  {nome:'Ana Lima',      cpf:'345.678.901-22',tel:'(61) 99903-3333',senha:'viagem123',status:'Confirmado'},
+  {nome:'Pedro Souza',   cpf:'456.789.012-33',tel:'(61) 99904-4444',senha:'viagem123',status:'Pendente'},
+  {nome:'Carla Mendes',  cpf:'567.890.123-44',tel:'(61) 99905-5555',senha:'viagem123',status:'Pendente'},
+  {nome:'Lucas Ferreira',cpf:'678.901.234-55',tel:'(61) 99906-6666',senha:'viagem123',status:'Pendente'},
+];
+
+function contasSalvas() {
+  try { return JSON.parse(localStorage.getItem('vf_accounts') || '[]'); } catch(e){ return []; }
+}
+
+function carregarContas() {
+  var salvas = contasSalvas();
+  var idx = {};
+  salvas.forEach(function(c){ idx[c.cpf.replace(/\D/g,'')] = true; });
+  return salvas.concat(DEMOS.filter(function(d){ return !idx[d.cpf.replace(/\D/g,'')]; }));
+}
+
+/* ─── Máscaras ─── */
+function mascaraCPF(inp) {
+  var v = inp.value.replace(/\D/g,'').slice(0,11);
+  if      (v.length > 9) v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{0,2})/,'$1.$2.$3-$4');
+  else if (v.length > 6) v = v.replace(/(\d{3})(\d{3})(\d{0,3})/,'$1.$2.$3');
+  else if (v.length > 3) v = v.replace(/(\d{3})(\d{0,3})/,'$1.$2');
+  inp.value = v;
+  inp.classList.remove('vermelho');
+}
+
+function mascaraTel(inp) {
+  var v = inp.value.replace(/\D/g,'').slice(0,11);
+  if      (v.length > 10) v = v.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3');
+  else if (v.length > 6)  v = v.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3');
+  else if (v.length > 2)  v = v.replace(/(\d{2})(\d{0,5})/,'($1) $2');
+  inp.value = v;
+  inp.classList.remove('vermelho');
+}
+
+/* ─── Senha ─── */
+function mostrarForca() {
+  var p = el('c-pass1').value;
+  var s = 0;
+  if (p.length >= 6) s++;
+  if (p.length >= 10) s++;
+  if (/[A-Z]/.test(p) || /\d/.test(p)) s++;
+  if (/[^a-zA-Z0-9]/.test(p)) s++;
+  var cores  = ['','#E53E3E','#F6A623','#3B7BFF','#00B37E'];
+  var labels = ['','Fraca','Razoável','Boa','Forte ✓'];
+  for (var i = 1; i <= 4; i++) el('fb'+i).style.background = i <= s ? cores[s] : 'var(--g200)';
+  el('ftxt').textContent = p ? (labels[s]||'Forte ✓') : 'Força da senha';
+  el('ftxt').style.color = s > 0 ? cores[s] : 'var(--g400)';
+  el('c-pass1').classList.remove('vermelho');
+}
+
+function checarMatch() {
+  var p1 = el('c-pass1').value, p2 = el('c-pass2').value;
+  var m  = el('match-msg');
+  el('c-pass2').classList.remove('vermelho');
+  if (!p2) { m.textContent=''; return; }
+  if (p1===p2){ m.textContent='✅ Senhas coincidem'; m.style.color='var(--green)'; }
+  else        { m.textContent='❌ Senhas diferentes';  m.style.color='var(--red)'; }
+}
+
+function verSenha(id, icone) {
+  var inp = el(id);
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  icone.textContent = inp.type === 'password' ? '👁' : '🙈';
+}
+
+/* ─── Alertas ─── */
+function mostrarErro(id, msg) {
+  var e = el(id);
+  e.textContent = msg;
+  e.style.display = 'block';
+}
+function ocultarErro(id) {
+  el(id).style.display = 'none';
+}
+function esconderErros() {
+  document.querySelectorAll('.alerta').forEach(function(e){ e.style.display='none'; });
+  limparReds();
+}
+function limparReds() {
+  document.querySelectorAll('.vermelho').forEach(function(e){ e.classList.remove('vermelho'); });
+}
+
+/* ─── Utils ─── */
+function el(id){ return document.getElementById(id); }
+function val(id){ var e = el(id); return e && e.value ? e.value.trim() : ''; }
+function mostrar(id, sim){ var e = el(id); if(e) e.style.display = sim ? 'block' : 'none'; }
+function fmtData(d){
+  if (!d) return '—';
+  var p = d.split('-'); return p[2]+'/'+p[1]+'/'+p[0];
+}
+
+/* ─── Animação dos painéis ─── */
+var styleAnim = document.createElement('style');
+styleAnim.textContent = '@keyframes aparece{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}';
+document.head.appendChild(styleAnim);
+
+/* ─── Enter ─── */
+document.addEventListener('keydown', function(e) {
+  if (e.key !== 'Enter') return;
+  if (portalAtual === 'adm')    { loginAdm(); return; }
+  if (modoAtual   === 'login')  { loginVj();  return; }
+  if (passoAtual  === 1) avancarP1();
+  else if (passoAtual === 2) avancarP2();
+  else if (passoAtual === 3) finalizarCadastro();
+});
+</script>
+</body>
+</html>

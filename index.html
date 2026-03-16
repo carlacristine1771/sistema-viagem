@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ViagemFácil — Sistema de Gestão de Excursões</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/screens.css">
+</head>
+<body>
+
+<!-- ═══════════ SIDEBAR ═══════════ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-logo">
+      <div class="brand-icon">✈</div>
+      <div>
+        <div class="brand-name">Viagem<span>Fácil</span></div>
+        <div class="brand-sub">Gestão de Excursões</div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="nav-section">
+    <div class="nav-label">Navegação</div>
+    <div class="nav-item active" id="nav-cadastro" onclick="goTo('cadastro')">
+      <span class="nav-icon">👥</span>
+      <span class="nav-label-text">Viajantes</span>
+      <div class="nav-badge" id="badge-cadastro">0</div>
+    </div>
+    <div class="nav-item" id="nav-onibus" onclick="goTo('onibus')">
+      <span class="nav-icon">🚌</span>
+      <span class="nav-label-text">Ônibus</span>
+    </div>
+    <div class="nav-item" id="nav-hotel" onclick="goTo('hotel')">
+      <span class="nav-icon">🏨</span>
+      <span class="nav-label-text">Hotel</span>
+    </div>
+    <div class="nav-item" id="nav-pagamentos" onclick="goTo('pagamentos')">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label-text">Pagamentos</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sidebar-trip-info">
+      <div class="trip-label">Viagem ativa</div>
+      <div class="trip-name">Retiro Espiritual 2025</div>
+      <div class="trip-date">📅 15 a 18 de Agosto</div>
+      <div class="trip-stats">
+        <div class="trip-stat">
+          <div class="trip-stat-n" id="trip-conf">0</div>
+          <div class="trip-stat-l">Confirm.</div>
+        </div>
+        <div class="trip-stat">
+          <div class="trip-stat-n">44</div>
+          <div class="trip-stat-l">Vagas</div>
+        </div>
+        <div class="trip-stat">
+          <div class="trip-stat-n" id="trip-pago-pct">0%</div>
+          <div class="trip-stat-l">Pago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div class="main">
+
+  <!-- ═══════════ TOPBAR ═══════════ -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-title" id="topbar-title">Viajantes</div>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-search">
+        <span class="tb-icon">🔍</span>
+        <input type="text" id="global-search" placeholder="Buscar viajante..." oninput="globalSearch()">
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--gray-600)">
+        <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#0057FF,#00C4B4);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white">AD</div>
+        <span id="topbar-user-name" style="font-weight:600">Admin</span>
+      </div>
+      <button onclick="logout()" style="padding:7px 14px;border-radius:8px;background:#F3F4F6;border:none;cursor:pointer;font-family:inherit;font-size:12px;font-weight:600;color:#4B5563;transition:all .15s" onmouseover="this.style.background='#E5E7EB'" onmouseout="this.style.background='#F3F4F6'">Sair</button>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 1 — CADASTRO DE VIAJANTES
+  ══════════════════════════════════════════════════ -->
+  <section class="screen active" id="sc-cadastro">
+
+    <div class="page-hd">
+      <div class="page-hd-left">
+        <div class="page-title">Viajantes Cadastrados</div>
+        <div class="page-subtitle">Gerencie todos os participantes da viagem</div>
+      </div>
+      <div class="page-hd-actions">
+        <button class="btn btn-secondary" onclick="exportarCSV()">📥 Exportar</button>
+        <button class="btn btn-primary" onclick="openModal('modal-novo')">＋ Adicionar Viajante</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon si-blue">👥</div>
+          <div class="stat-trend tr-neutral" id="st-vagas-badge">0 vagas livres</div>
+        </div>
+        <div class="stat-val" id="st-total">0</div>
+        <div class="stat-lbl">Total de viajantes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon si-green">✅</div>
+          <div class="stat-trend tr-up" id="st-conf-badge">0%</div>
+        </div>
+        <div class="stat-val" id="st-conf">0</div>
+        <div class="stat-lbl">Confirmados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon si-orange">⏳</div>
+        </div>
+        <div class="stat-val" id="st-pend">0</div>
+        <div class="stat-lbl">Pendentes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top">
+          <div class="stat-icon si-teal">🪑</div>
+        </div>
+        <div class="stat-val" id="st-vagas">44</div>
+        <div class="stat-lbl">Assentos livres</div>
+      </div>
+    </div>
+
+    <!-- Privacy notice -->
+    <div class="privacy-notice">
+      <span class="privacy-notice-icon">🔒</span>
+      <div class="privacy-notice-text">
+        <strong>Privacidade dos dados:</strong> CPF e telefone estão mascarados nesta listagem para proteger os dados pessoais dos viajantes.
+        Apenas administradores com acesso completo podem visualizar as informações inteiras.
+      </div>
+    </div>
+
+    <!-- Table card -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Lista de Viajantes</div>
+          <div class="card-subtitle" id="cad-count-label">0 viajantes cadastrados</div>
+        </div>
+        <div class="flex gap-8 items-center">
+          <div class="search-bar" style="width:240px">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-cad" placeholder="Buscar por nome..." oninput="filterCad()">
+          </div>
+          <select class="form-input" style="width:170px" onchange="filterCad()" id="filter-status">
+            <option value="">Todos os status</option>
+            <option>Confirmado</option>
+            <option>Pendente</option>
+          </select>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Viajante</th>
+              <th>CPF (mascarado)</th>
+              <th>Telefone</th>
+              <th>Assento</th>
+              <th>Quarto</th>
+              <th>Pagamento</th>
+              <th>Status</th>
+              <th style="text-align:right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-cad">
+            <tr><td colspan="8">
+              <div class="empty-state">
+                <div class="empty-icon">👤</div>
+                <div class="empty-title">Nenhum viajante ainda</div>
+                <div class="empty-sub">Clique em "Adicionar Viajante" para começar</div>
+              </div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 2 — ÔNIBUS / MAPA DE ASSENTOS
+  ══════════════════════════════════════════════════ -->
+  <section class="screen" id="sc-onibus">
+
+    <div class="page-hd">
+      <div class="page-hd-left">
+        <div class="page-title">Mapa de Assentos</div>
+        <div class="page-subtitle">Distribuição dos passageiros no ônibus</div>
+      </div>
+      <div class="page-hd-actions">
+        <div class="badge b-gray" id="seat-sel-badge">Nenhum assento selecionado</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-green">🟢</div></div>
+        <div class="stat-val" id="b-livres">44</div>
+        <div class="stat-lbl">Assentos livres</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-red">🔴</div></div>
+        <div class="stat-val" id="b-ocupados">0</div>
+        <div class="stat-lbl">Ocupados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-blue">📊</div></div>
+        <div class="stat-val" id="b-pct">0%</div>
+        <div class="stat-lbl">Taxa de ocupação</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-teal">🎫</div></div>
+        <div class="stat-val">44</div>
+        <div class="stat-lbl">Capacidade total</div>
+      </div>
+    </div>
+
+    <div class="bus-layout">
+      <!-- Map -->
+      <div class="bus-wrapper">
+        <div class="bus-front-label">⬆ Frente do veículo</div>
+        <div class="seat-grid" id="seat-map"></div>
+        <div class="seat-legend">
+          <div class="leg-item"><div class="leg-box leg-free"></div> Livre</div>
+          <div class="leg-item"><div class="leg-box leg-taken"></div> Ocupado</div>
+          <div class="leg-item"><div class="leg-box leg-selected"></div> Selecionado</div>
+        </div>
+        <!-- Occupancy bar -->
+        <div class="divider mt-16"></div>
+        <div class="flex justify-between text-xs text-muted mt-12" style="margin-top:12px;margin-bottom:6px">
+          <span>Ocupação do ônibus</span>
+          <span id="b-pct-label">0 / 44</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-fill" id="b-progress-fill" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--teal))"></div>
+        </div>
+      </div>
+
+      <!-- Side panel -->
+      <div class="bus-side-panel">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Atribuir Assento</div>
+              <div class="card-subtitle">Selecione no mapa e confirme abaixo</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="form-group mb-16" style="margin-bottom:14px">
+              <label>Viajante *</label>
+              <select class="form-input" id="sel-viajante-bus">
+                <option value="">Selecione um viajante...</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:16px">
+              <label>Assento selecionado</label>
+              <div class="input-group">
+                <span class="input-group-icon">🪑</span>
+                <input class="form-input" id="input-assento-sel" type="text" placeholder="Clique em um assento no mapa" readonly>
+              </div>
+            </div>
+            <button class="btn btn-primary w-full" style="width:100%" onclick="confirmarAssento()">
+              ✓ Confirmar Reserva
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Reservas Confirmadas</div>
+              <div class="card-subtitle" id="bus-res-count">0 assentos reservados</div>
+            </div>
+          </div>
+          <div style="padding:12px;display:flex;flex-direction:column;gap:8px;max-height:320px;overflow-y:auto" id="bus-reservas-list">
+            <div class="empty-state" style="padding:24px">
+              <div class="empty-icon" style="font-size:28px">🪑</div>
+              <div class="empty-title" style="font-size:13px">Nenhuma reserva ainda</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 3 — HOTEL / QUARTOS
+  ══════════════════════════════════════════════════ -->
+  <section class="screen" id="sc-hotel">
+
+    <div class="page-hd">
+      <div class="page-hd-left">
+        <div class="page-title">Quartos do Hotel</div>
+        <div class="page-subtitle">Distribuição, tipos e alocação de hóspedes</div>
+      </div>
+      <div class="page-hd-actions">
+        <button class="btn btn-outline" onclick="openHotelCfg()">⚙ Configurar Hotel</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-blue">🏨</div></div>
+        <div class="stat-val" id="h-total">12</div>
+        <div class="stat-lbl">Total de quartos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-green">✅</div></div>
+        <div class="stat-val" id="h-disp">12</div>
+        <div class="stat-lbl">Com vaga</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-red">🔒</div></div>
+        <div class="stat-val" id="h-cheios">0</div>
+        <div class="stat-lbl">Lotados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-teal">👤</div></div>
+        <div class="stat-val" id="h-hospedes">0</div>
+        <div class="stat-lbl">Hóspedes alocados</div>
+      </div>
+    </div>
+
+    <!-- Legenda de tipos -->
+    <div class="hotel-legend" id="hotel-legend"></div>
+
+    <!-- Layout: mapa + painel lateral -->
+    <div class="hotel-layout">
+
+      <!-- Mapa dos quartos -->
+      <div class="card hotel-map-card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Mapa dos Quartos</div>
+            <div class="card-subtitle">Clique em um quarto para ver detalhes ou alocar</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="rooms-grid" id="rooms-map"></div>
+        </div>
+      </div>
+
+      <!-- Painel lateral direito -->
+      <div class="hotel-side">
+
+        <!-- Detalhe do quarto selecionado -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Detalhe do Quarto</div><div class="card-subtitle">Selecione um quarto no mapa</div></div>
+          </div>
+          <div id="room-detail-panel" style="min-height:80px;color:var(--gray-400);font-size:13px;text-align:center;padding:24px 16px">
+            ← Clique em um quarto para ver informações
+          </div>
+        </div>
+
+        <!-- Alocar hóspede -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Alocar Hóspede</div><div class="card-subtitle">Selecione quarto e viajante</div></div>
+          </div>
+          <div class="card-body">
+            <div class="form-group" style="margin-bottom:14px">
+              <label>Viajante *</label>
+              <select class="form-input" id="sel-viajante-hotel">
+                <option value="">Selecione um viajante...</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:16px">
+              <label>Quarto selecionado</label>
+              <div class="input-group">
+                <span class="input-group-icon">🏨</span>
+                <input class="form-input" id="input-quarto-sel" type="text" placeholder="Clique em um quarto no mapa" readonly>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="alocarQuarto()">
+              ✓ Alocar no Quarto
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de alocações agrupadas por quarto -->
+        <div class="card">
+          <div class="card-header">
+            <div><div class="card-title">Hóspedes Alocados</div><div class="card-subtitle" id="hotel-aloc-count">0 hóspedes alocados</div></div>
+          </div>
+          <div style="padding:10px 12px;display:flex;flex-direction:column;gap:4px;max-height:320px;overflow-y:auto" id="hotel-aloc-list">
+            <div class="empty-state" style="padding:24px">
+              <div class="empty-icon" style="font-size:28px">🏨</div>
+              <div class="empty-title" style="font-size:13px">Nenhuma alocação ainda</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       TELA 4 — PAGAMENTOS
+  ══════════════════════════════════════════════════ -->
+  <section class="screen" id="sc-pagamentos">
+
+    <div class="page-hd">
+      <div class="page-hd-left">
+        <div class="page-title">Controle de Pagamentos</div>
+        <div class="page-subtitle">Acompanhe a arrecadação da viagem em tempo real</div>
+      </div>
+      <div class="page-hd-actions">
+        <button class="btn btn-outline" onclick="exportarRelatorioPag()">📥 Relatório</button>
+        <button class="btn btn-outline" onclick="syncPgSelect();openModal('modal-plano')" style="display:none" id="btn-plano-rapido">📆 Plano</button>
+        <button class="btn btn-primary" onclick="syncPgSelect();openModal('modal-pagamento')">＋ Registrar Pagamento</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-green">💰</div><div class="stat-trend tr-up" id="pg-pct-badge">0%</div></div>
+        <div class="stat-val" id="pg-arrecadado">R$0</div>
+        <div class="stat-lbl">Total arrecadado</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-blue">🎯</div></div>
+        <div class="stat-val" id="pg-meta">R$0</div>
+        <div class="stat-lbl">Meta total</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-green">✅</div></div>
+        <div class="stat-val" id="pg-npagos">0</div>
+        <div class="stat-lbl">Pagamentos completos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-top"><div class="stat-icon si-orange">⏳</div></div>
+        <div class="stat-val" id="pg-npend">0</div>
+        <div class="stat-lbl">Pendentes</div>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="g2 mb-20" style="margin-bottom:16px">
+      <!-- Donut -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Distribuição de Status</div></div>
+        <div class="card-body">
+          <div class="donut-wrap">
+            <svg width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0">
+              <circle cx="70" cy="70" r="54" fill="none" stroke="var(--gray-100)" stroke-width="18"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="var(--green)" stroke-width="18"
+                stroke-dasharray="0 339" stroke-dashoffset="0" stroke-linecap="round"
+                transform="rotate(-90 70 70)" id="donut-pagos" style="transition:stroke-dasharray 1s ease"/>
+              <circle cx="70" cy="70" r="54" fill="none" stroke="var(--yellow)" stroke-width="18"
+                stroke-dasharray="0 339" transform="rotate(-90 70 70)" id="donut-parcial"
+                style="transition:all 1s ease"/>
+              <text x="70" y="63" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="22" font-weight="800" fill="#111827" id="donut-pct">0%</text>
+              <text x="70" y="79" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11" fill="#9CA3AF">arrecadado</text>
+            </svg>
+            <div class="donut-legend">
+              <div class="dl-row"><div class="dl-color" style="background:var(--green)"></div><div class="dl-label"><strong id="dl-pagos">0 pagos</strong><span>Valor quitado</span></div></div>
+              <div class="dl-row"><div class="dl-color" style="background:var(--yellow)"></div><div class="dl-label"><strong id="dl-parciais">0 parciais</strong><span>Em andamento</span></div></div>
+              <div class="dl-row"><div class="dl-color" style="background:var(--red)"></div><div class="dl-label"><strong id="dl-pendentes">0 pendentes</strong><span>Sem pagamento</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bar chart -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Arrecadação por Mês</div></div>
+        <div class="card-body">
+          <div class="bar-wrap" id="bar-chart-wrap" style="height:150px;align-items:flex-end;gap:10px;display:flex;padding-top:24px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-body">
+        <div class="flex justify-between items-center" style="margin-bottom:10px">
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--gray-900)">Progresso da Meta</div>
+            <div class="text-xs text-muted mt-12" style="margin-top:2px" id="pg-progress-sub">R$ 0,00 arrecadados de R$ 0,00</div>
+          </div>
+          <div style="font-size:24px;font-weight:800;color:var(--blue)" id="pg-progress-pct">0%</div>
+        </div>
+        <div class="progress-wrap" style="height:10px">
+          <div class="progress-fill" id="pg-progress-fill" style="width:0%;background:linear-gradient(90deg,var(--blue),var(--teal))"></div>
+        </div>
+        <div class="flex justify-between text-xs text-muted" style="margin-top:8px">
+          <span>Faltam: <strong style="color:var(--red)" id="pg-faltam">R$ 0,00</strong></span>
+          <span id="pg-progress-msg"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payments table -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="card-header">
+        <div><div class="card-title">Lista de Pagamentos</div></div>
+        <div class="flex gap-12 items-center">
+          <div class="filter-pills">
+            <div class="pill active" onclick="setPgFilter('todos',this)">Todos</div>
+            <div class="pill" onclick="setPgFilter('Pago',this)">✅ Pagos</div>
+            <div class="pill" onclick="setPgFilter('Parcial',this)">⏳ Parciais</div>
+            <div class="pill" onclick="setPgFilter('Pendente',this)">❌ Pendentes</div>
+          </div>
+          <div class="search-bar" style="width:200px">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-pg" placeholder="Buscar..." oninput="filterPg()">
+          </div>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Viajante</th>
+              <th>Total</th>
+              <th>Pago</th>
+              <th>Saldo</th>
+              <th>Parcelas</th>
+              <th>Progresso</th>
+              <th>Status</th>
+              <th style="text-align:right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-pg">
+            <tr><td colspan="8">
+              <div class="empty-state">
+                <div class="empty-icon">💳</div>
+                <div class="empty-title">Nenhum pagamento ainda</div>
+                <div class="empty-sub">Cadastre viajantes e registre os pagamentos</div>
+              </div>
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Parcelas em atraso / próximas -->
+    <div class="card" style="margin-bottom:16px" id="card-alertas-parcelas">
+      <div class="card-header">
+        <div><div class="card-title">⚡ Parcelas e Vencimentos</div><div class="card-subtitle">Viajantes com plano de parcelamento</div></div>
+        <button class="btn btn-outline btn-sm" onclick="abrirPlano(null)">📆 Novo Plano</button>
+      </div>
+      <div id="alertas-parcelas-body" style="padding:0 16px 12px">
+        <div class="empty-state" style="padding:20px">
+          <div class="empty-icon" style="font-size:28px">📆</div>
+          <div class="empty-title" style="font-size:13px">Nenhum plano de parcelamento ativo</div>
+          <div class="empty-sub">Clique em 📆 na tabela para criar um plano para um viajante</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">Histórico de Transações</div><div class="card-subtitle">Últimas 8 transações</div></div>
+      <div class="card-body" style="padding-top:8px;padding-bottom:8px">
+        <div id="pg-timeline"></div>
+      </div>
+    </div>
+
+  </section>
+
+</div><!-- /main -->
+
+<!-- ════════════════════ MODALS ════════════════════ -->
+
+<!-- Modal: Novo Viajante -->
+<div class="modal-overlay" id="modal-novo">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Adicionar Viajante</div>
+        <div class="modal-subtitle">Preencha os campos obrigatórios (*)</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-novo')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="privacy-notice" style="margin-bottom:16px">
+        <span class="privacy-notice-icon">🔒</span>
+        <div class="privacy-notice-text"><strong>CPF e telefone</strong> serão automaticamente mascarados na listagem pública por segurança.</div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group span2">
+          <label class="label-required">Nome completo</label>
+          <input class="form-input" id="f-nome" type="text" placeholder="Ex: Maria Aparecida da Silva">
+        </div>
+        <div class="form-group">
+          <label class="label-required">CPF</label>
+          <div class="input-group">
+            <span class="input-group-icon">🔒</span>
+            <input class="form-input" id="f-cpf" type="text" placeholder="000.000.000-00" oninput="maskCPF(this)" maxlength="14">
+          </div>
+          <div class="input-hint lock">🔒 Ficará mascarado: 000.***.***-00</div>
+        </div>
+        <div class="form-group">
+          <label class="label-required">Telefone / WhatsApp</label>
+          <div class="input-group">
+            <span class="input-group-icon">📱</span>
+            <input class="form-input" id="f-tel" type="text" placeholder="(00) 00000-0000" oninput="maskTel(this)" maxlength="15">
+          </div>
+          <div class="input-hint lock">🔒 Ficará parcialmente oculto</div>
+        </div>
+        <div class="form-group">
+          <label>Data de nascimento</label>
+          <input class="form-input" id="f-nasc" type="date">
+        </div>
+        <div class="form-group">
+          <label>Gênero</label>
+          <select class="form-input" id="f-gen">
+            <option value="">Não informado</option>
+            <option>Masculino</option>
+            <option>Feminino</option>
+          </select>
+        </div>
+        <div class="form-group span2">
+          <label>E-mail</label>
+          <input class="form-input" id="f-email" type="email" placeholder="viajante@email.com">
+        </div>
+        <div class="form-group span2">
+          <label class="label-required">Valor da viagem (R$)</label>
+          <div class="input-group">
+            <span class="input-group-icon">💰</span>
+            <input class="form-input" id="f-valor" type="number" placeholder="0,00" min="1" step="0.01">
+          </div>
+        </div>
+        <div class="form-group span2">
+          <label>Observações</label>
+          <textarea class="form-input" id="f-obs" placeholder="Restrições alimentares, necessidades especiais, informações importantes..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-novo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="adicionarViajante()">✓ Salvar Viajante</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Config Hotel -->
+<div class="modal-overlay" id="modal-hotel-cfg">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div><div class="modal-title">Configurar Hotel</div><div class="modal-subtitle">Defina os quartos e tipos disponíveis</div></div>
+      <button class="modal-close" onclick="closeModal('modal-hotel-cfg')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Número de quartos</label>
+          <input class="form-input" id="cfg-nq" type="number" value="12" min="1" max="100">
+        </div>
+        <div class="form-group">
+          <label>Capacidade padrão por quarto</label>
+          <input class="form-input" id="cfg-cap" type="number" value="4" min="1" max="12">
+        </div>
+      </div>
+
+      <div style="margin-top:18px;margin-bottom:10px;font-size:13px;font-weight:700;color:var(--gray-700)">Tipos de quarto disponíveis</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="cfg-tipos-grid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div class="privacy-notice mt-16" style="margin-top:16px">
+        <span class="privacy-notice-icon">⚠️</span>
+        <div class="privacy-notice-text">Hóspedes já alocados não serão removidos ao alterar a configuração.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-hotel-cfg')">Cancelar</button>
+      <button class="btn btn-primary" onclick="cfgHotel()">✓ Aplicar Configuração</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Detalhes do Quarto -->
+<div class="modal-overlay" id="modal-quarto-detalhe">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="qd-title">Quarto —</div>
+        <div class="modal-subtitle" id="qd-subtitle">Detalhes e hóspedes</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-quarto-detalhe')">✕</button>
+    </div>
+    <div class="modal-body" id="qd-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-quarto-detalhe')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Registrar Pagamento -->
+<div class="modal-overlay" id="modal-pagamento">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-header">
+      <div><div class="modal-title">Registrar Pagamento</div><div class="modal-subtitle">Insira os dados da transação</div></div>
+      <button class="modal-close" onclick="closeModal('modal-pagamento')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- Saldo info bar -->
+      <div id="pg-saldo-bar" style="display:none;background:var(--blue-light);border:1px solid #c7d9ff;border-radius:10px;padding:12px 14px;margin-bottom:16px;display:none">
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
+          <div style="font-size:12px;color:var(--gray-600)">
+            <span style="font-weight:700;color:var(--gray-900)" id="pg-saldo-nome">—</span>
+          </div>
+          <div style="display:flex;gap:14px;font-size:12px">
+            <span>Total: <strong id="pg-saldo-total">—</strong></span>
+            <span style="color:var(--green)">Pago: <strong id="pg-saldo-pago">—</strong></span>
+            <span style="color:var(--red)">Saldo: <strong id="pg-saldo-restante">—</strong></span>
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <div style="height:6px;background:#c7d9ff;border-radius:99px;overflow:hidden">
+            <div id="pg-saldo-fill" style="height:100%;background:var(--blue);border-radius:99px;transition:width .5s ease;width:0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group span2">
+          <label class="label-required">Viajante</label>
+          <select class="form-input" id="pg-viajante-sel" onchange="onPgViajanteChange()">
+            <option value="">Selecione um viajante...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="label-required">Valor pago (R$)</label>
+          <div class="input-group">
+            <span class="input-group-icon">💰</span>
+            <input class="form-input" id="pg-valor" type="number" placeholder="0,00" min="0.01" step="0.01">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Data do pagamento</label>
+          <input class="form-input" id="pg-data" type="date">
+        </div>
+        <div class="form-group span2">
+          <label>Método de pagamento</label>
+          <select class="form-input" id="pg-metodo">
+            <option>💵 Dinheiro</option>
+            <option>📱 PIX</option>
+            <option>💳 Cartão de crédito</option>
+            <option>💳 Cartão de débito</option>
+            <option>🏦 Transferência bancária</option>
+            <option>📄 Cheque</option>
+          </select>
+        </div>
+        <div class="form-group span2">
+          <label>Tipo de pagamento</label>
+          <select class="form-input" id="pg-tipo">
+            <option value="unico">💯 Pagamento único (integral)</option>
+            <option value="entrada">⬇️ Entrada / 1ª parcela</option>
+            <option value="parcela">📆 Parcela intermediária</option>
+            <option value="saldo">✅ Quitação do saldo</option>
+            <option value="outro">📝 Outro</option>
+          </select>
+        </div>
+        <div class="form-group span2">
+          <label>Observação</label>
+          <input class="form-input" id="pg-obs" type="text" placeholder="Ex: 2ª parcela de 3, confirmado via PIX às 14h...">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-pagamento')">Cancelar</button>
+      <button class="btn btn-primary" onclick="registrarPagamento()">✓ Confirmar Pagamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Histórico de pagamentos -->
+<div class="modal-overlay" id="modal-historico">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="hist-modal-title">Histórico de Pagamentos</div>
+        <div class="modal-subtitle" id="hist-modal-sub">Todas as transações do viajante</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-historico')">✕</button>
+    </div>
+    <div class="modal-body" id="hist-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="hist-btn-estornar" onclick="estornarUltimo()" style="margin-right:auto;display:none">⚠️ Estornar último</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-historico')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Plano de parcelas -->
+<div class="modal-overlay" id="modal-plano">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Plano de Parcelamento</div>
+        <div class="modal-subtitle">Configure as parcelas do viajante</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('modal-plano')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:16px">
+        <label class="label-required">Viajante</label>
+        <select class="form-input" id="plano-viajante-sel" onchange="onPlanoViajanteChange()">
+          <option value="">Selecione um viajante...</option>
+        </select>
+      </div>
+      <div id="plano-info-bar" style="background:var(--blue-light);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;display:none"></div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Número de parcelas</label>
+          <select class="form-input" id="plano-nparcelas" onchange="previewPlano()">
+            <option value="2">2x</option><option value="3">3x</option>
+            <option value="4">4x</option><option value="5">5x</option>
+            <option value="6">6x</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Vencimento da 1ª parcela</label>
+          <input class="form-input" id="plano-data-inicio" type="date" onchange="previewPlano()">
+        </div>
+      </div>
+      <div id="plano-preview" style="margin-top:4px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('modal-plano')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarPlano()">✓ Criar Plano de Parcelas</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast">
+  <div class="toast-icon" id="toast-icon"></div>
+  <div class="toast-text">
+    <div class="toast-title" id="toast-title"></div>
+    <div class="toast-msg" id="toast-msg"></div>
+  </div>
+  <div class="toast-close" onclick="hideToast()">✕</div>
+  <div class="toast-progress" id="toast-progress" style="background:var(--blue)"></div>
+</div>
+
+<!-- ════════════ SCRIPTS ════════════ -->
+<script src="js/state.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/cadastro.js"></script>
+<script src="js/onibus.js"></script>
+<script src="js/hotel.js"></script>
+<script src="js/pagamentos.js"></script>
+<script src="js/extras.js"></script>
+<script src="js/init.js"></script>
+<script src="js/auth.js"></script>
+
+</body>
+</html>
